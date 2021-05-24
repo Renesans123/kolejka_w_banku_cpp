@@ -3,29 +3,38 @@
 #include <algorithm>
 using namespace std;
 
-Counter::Counter(unsigned nr_, Employee e, std::deque<Client> queue_)
-	: nr{ nr_ }, employee{ e }, queue{queue_}
+set<int> Counter::nrsInUse{};
+vector<Employee> Counter::employeesAssigned{};
+
+Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
+	: employee{ e }, queue{queue_}
 {
-	if (!this->checkIfNrValid(this->nr))
-		throw(InvalidCounterNr(this->nr));
+	if (!this->checkIfNrWithinBounds(nr_))
+		throw(InvalidCounterNr(nr_));
+	if (!this->checkIfNrIsUnique(nr_))
+		throw(DuplicateCounterNr(nr_));
+	nrsInUse.insert(nr_);
+	this->nr = nr_;
+
 }
 
 bool Counter::operator==(const Counter& c)
 {
-	if (this->getNr() == c.getNr())
-		return true;
-	return false;
+	return (this->getNr() == c.getNr()) ? true : false;
 }
 
-bool Counter::checkIfNrValid(unsigned counterNr)
+bool Counter::checkIfNrWithinBounds(const int &counterNr)
 {
-	string n = to_string(counterNr);
-	if (n.length() != 4)
-		return false;
-	return true;
+	return (counterNr < 1000 || counterNr > 9999) ? false : true; // check if the nr's 4-digit
 }
 
-unsigned Counter::getNr() const
+bool Counter::checkIfNrIsUnique(const int &counterNr)
+{
+	// check if nr's not alrsady used - must be unique
+	return (find(nrsInUse.begin(), nrsInUse.end(), counterNr) != nrsInUse.end()) ? false : true;
+}
+
+int Counter::getNr() const
 {
 	return this->nr;
 }
@@ -38,10 +47,17 @@ std::deque<Client> Counter::getQueue()
 	return this->queue;
 }
 
-void Counter::changeCounterNr(unsigned newNr)
+void Counter::changeCounterNr(int newNr)
 {
-	if (!this->checkIfNrValid(newNr))
+	if (!this->checkIfNrWithinBounds(newNr))
 		throw(InvalidCounterNr(newNr));
+	if (!this->checkIfNrIsUnique(newNr))
+		throw(DuplicateCounterNr(newNr));
+	auto it = find(nrsInUse.begin(), nrsInUse.end(), this->nr);
+	if (it == nrsInUse.end())
+		throw(CounterNrNotFound());
+	nrsInUse.erase(this->nr);
+	nrsInUse.insert(newNr);
 	this->nr = newNr;
 }
 

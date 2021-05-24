@@ -68,14 +68,35 @@ public:
 
 class InvalidCounterNr : public std::exception
 {
-	unsigned nr;
+	int nr;
 public:
-	InvalidCounterNr(unsigned nr_)
+	InvalidCounterNr(int nr_)
 		: nr{ nr_ }
 	{};
 	std::string what()
 	{
 		return "\nProduct '" + std::to_string(this->nr) + "' not found.\n";
+	}
+};
+
+class DuplicateCounterNr : public std::exception
+{
+	int nr;
+public:
+	DuplicateCounterNr(int nr_)
+		: nr{ nr_ }
+	{};
+	std::string what()
+	{
+		return "\nCounter numbers must be unique! Nr '" + std::to_string(this->nr) + "' already in use.\n";
+	}
+};
+
+class CounterNrNotFound : public std::exception
+{
+	std::string what()
+	{
+		return "\nCounter Nr not found. \n";
 	}
 };
 
@@ -91,3 +112,4 @@ public:
 		return "\nClient with a code '" + std::to_string(code) + "'was not found.\n";
 	}
 };
+

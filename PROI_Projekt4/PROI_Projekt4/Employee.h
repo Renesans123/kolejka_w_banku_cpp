@@ -10,14 +10,11 @@ class Employee
 	Name name;
 	static set<int> availableNumbers;
 	int employeeNumber,stationNumber;
-	set <permision> permissions;
-	set <responsibility> responsibilities;
+	set<permision> permissions;
+	set<responsibility> responsibilities;
 public:
 	Employee(std::string firstName, std::string lastName);
-	Name getName()
-	{
-		return this->name;
-	}
+	Name getName();
 		virtual ~Employee();
 		int getEmployeeNumber() const;
 		void setEmployeeNumber(int empoyeeNumber);

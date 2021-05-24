@@ -1,0 +1,16 @@
+#ignore entire directories
+Debug/
+.vs/
+#ignore files with extension
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.obj
+*.recipe
+#.exe
+*.log
+*.idb
+*.pdb
+*.tlog
+*.lastbulidstate

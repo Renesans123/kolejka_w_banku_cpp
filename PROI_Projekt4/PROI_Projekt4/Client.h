@@ -11,8 +11,8 @@ class Client
 private:
 	Name name;
 	Id id;
-	int clientCode; // 6 digits ?
-	std::string PIN; // 4 digits?
+	int clientCode; // 6 digits / can't start with zero
+	std::string PIN; // 4 digits
 	std::vector<Product> products;
 public:
 	Client(std::string firstName_, std::string lastName_, std::string idType_, std::string idNr_,

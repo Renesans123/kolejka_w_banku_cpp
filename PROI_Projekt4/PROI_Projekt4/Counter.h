@@ -3,22 +3,27 @@
 #include "Client.h"
 #include <deque>
 #include <memory>
+#include <algorithm>
+#include <vector>
 
 class Counter
 {
-	unsigned nr; // 3 digits?
+	static std::set<int> nrsInUse;
+	static std::vector<Employee> employeesAssigned;
+	int nr; // 4 digits
 	Employee employee;
 	std::deque<Client> queue;
 public:
-	Counter(unsigned nr_, Employee e, std::deque<Client> queue_ = {});
+	Counter(int nr_, const Employee &e, std::deque<Client> queue_ = {});
 	bool operator==(const Counter& c);
-	bool checkIfNrValid(unsigned counterNr);
-	 
-	unsigned getNr() const;
+	bool checkIfNrWithinBounds(const int &counterNr);
+	bool checkIfNrIsUnique(const int &counterNr);
+
+	int getNr() const;
 	Employee getEmployee();
 	std::deque<Client> getQueue();
 
-	void changeCounterNr(unsigned newNr);
+	void changeCounterNr(int newNr);
 	void newClient(Client newCl);
 	void clientLeftAfterService();
 	void clientLeft(Client cl);

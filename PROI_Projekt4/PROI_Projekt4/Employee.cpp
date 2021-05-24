@@ -3,6 +3,10 @@
 using namespace std;
 
 set<int> Employee::availableNumbers;
+Name Employee::getName()
+{
+	return this->name;
+}
 
 Employee::Employee(std::string firstName, std::string lastName)
 : name{Name(firstName, lastName)}

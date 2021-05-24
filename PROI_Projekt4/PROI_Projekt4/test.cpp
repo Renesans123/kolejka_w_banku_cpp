@@ -125,39 +125,49 @@ TEST_CASE("Client class")
 
 TEST_CASE("Counter class")
 {
+	Employee e1("John", "Jackson");
+	Employee e2("Jonathan", "Jackson");
+	Counter c1(2311, e1);
+	Counter c2(1221, e2);
+	//Employee e3("Joeffrey", "Jackson");
 	SECTION("Counter class Constructor")
 	{
-		Employee e("John", "Jackson");
-		Counter c(2311, e);
-		REQUIRE(c.getNr() == 2311);
-		REQUIRE(c.getQueue().size() == 0);
-		REQUIRE_THROWS_AS(Counter(342, e), InvalidCounterNr);
+		//REQUIRE(c1.getNr() == 2311);
+		//REQUIRE(c1.getQueue().size() == 0);
+		//REQUIRE_THROWS_AS(Counter(342, e3), InvalidCounterNr);
+		//REQUIRE_THROWS_AS(Counter(10000, e3), InvalidCounterNr);
+		//REQUIRE_THROWS_AS(Counter(2311, e3), DuplicateCounterNr);
 	}
-	SECTION("Changing parameters")
+	SECTION("Changing counter nr")
 	{
-		// counter nr
-		Employee e("John", "Jackson");
-		Counter c(2311, e);
-		c.changeCounterNr(1231);
-		REQUIRE(c.getNr() == 1231);
-		REQUIRE_THROWS_AS(c.changeCounterNr(12312), InvalidCounterNr);
-		// queue
-		c.newClient(Client("JoHn  ", "Bree", "Passport", "54404124241", 123421, "1412"));
-		c.newClient(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
-		REQUIRE(c.getQueue().front().getLastName() == "Bree");
-		REQUIRE(c.getQueue().back().getLastName() == "Pepegus");
-		REQUIRE(c.getQueue().size() == 2);
-		c.clientLeftAfterService();
-		REQUIRE(c.getQueue().size() == 1);
-		c.clearQueue();
-		REQUIRE(c.getQueue().size() == 0);
-		c.newClient(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
-		REQUIRE_THROWS_AS(c.clientLeft(Client("JoHn  ", "Bree", "Passport", "54404124241", 121421, "1412")), ClientNotFound);
-		c.clientLeft(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
-		REQUIRE(c.getQueue().size() == 0);
-		// assigned employee
-		REQUIRE(c.getEmployee().getName().getLastName() == "Jackson");
-		c.assignEmployee(Employee("Jackson", "Pollock"));
-		REQUIRE(c.getEmployee().getName().getLastName() == "Pollock");
+		//c1.changeCounterNr(1231);
+		//REQUIRE(c1.getNr() == 1231);
+		//REQUIRE_THROWS_AS(c1.changeCounterNr(12312), InvalidCounterNr);
+		//REQUIRE_THROWS_AS(c1.changeCounterNr(9), InvalidCounterNr);
+		//REQUIRE_THROWS_AS(c2.changeCounterNr(1231), DuplicateCounterNr);
 	}
+	//SECTION("Queue")
+	//{
+	//	// queue
+	//	c.newClient(Client("JoHn  ", "Bree", "Passport", "54404124241", 123421, "1412"));
+	//	c.newClient(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
+	//	REQUIRE(c.getQueue().front().getLastName() == "Bree");
+	//	REQUIRE(c.getQueue().back().getLastName() == "Pepegus");
+	//	REQUIRE(c.getQueue().size() == 2);
+	//	c.clientLeftAfterService();
+	//	REQUIRE(c.getQueue().size() == 1);
+	//	c.clearQueue();
+	//	REQUIRE(c.getQueue().size() == 0);
+	//	c.newClient(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
+	//	REQUIRE_THROWS_AS(c.clientLeft(Client("JoHn  ", "Bree", "Passport", "54404124241", 121421, "1412")), ClientNotFound);
+	//	c.clientLeft(Client("PePe  ", "PEpegus ", "Passport", "21304214241", 763421, "2212"));
+	//	REQUIRE(c.getQueue().size() == 0);
+	//	// assigned employee
+	//}
+	//SECTION("Employee")
+	//{
+	//	REQUIRE(c.getEmployee().getName().getLastName() == "Jackson");
+	//	c.assignEmployee(Employee("Jackson", "Pollock"));
+	//	REQUIRE(c.getEmployee().getName().getLastName() == "Pollock");
+	//}
 }
