@@ -7,12 +7,14 @@ Name::Name(std::string first, std::string last)
 	removeEndSpaces(firstName); removeAllSpaces(lastName); 
 	this->checkCaps(this->firstName); this->checkCaps(this->lastName);
 }
-
-std::string Name::getFirstName()
+Name::Name(const Name& n)
+	: firstName{n.getFirstName()}, lastName{ n.getLastName() }
+{}
+std::string Name::getFirstName() const
 {
 	return this->firstName;
 }
-std::string Name::getLastName()
+std::string Name::getLastName() const
 {
 	return this->lastName;
 }

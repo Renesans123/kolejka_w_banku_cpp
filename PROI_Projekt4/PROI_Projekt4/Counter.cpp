@@ -4,10 +4,10 @@
 using namespace std;
 
 set<int> Counter::nrsInUse{};
-vector<Employee> Counter::employeesAssigned{};
+set<Employee> Counter::employeesAssigned{};
 
 Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
-	: employee{ e }, queue{queue_}
+	: employee{e}, queue{queue_}
 {
 	if (!this->checkIfNrWithinBounds(nr_))
 		throw(InvalidCounterNr(nr_));
@@ -16,9 +16,12 @@ Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
 	nrsInUse.insert(nr_);
 	this->nr = nr_;
 
+	if (!this->checkIfEmployeeIsFree(e))
+		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
+	employeesAssigned.insert(e);
 }
 
-bool Counter::operator==(const Counter& c)
+bool Counter::operator==(const Counter& c) const noexcept
 {
 	return (this->getNr() == c.getNr()) ? true : false;
 }
@@ -34,17 +37,27 @@ bool Counter::checkIfNrIsUnique(const int &counterNr)
 	return (find(nrsInUse.begin(), nrsInUse.end(), counterNr) != nrsInUse.end()) ? false : true;
 }
 
+bool Counter::checkIfEmployeeIsFree(const Employee& e) const
+{
+	return (find(employeesAssigned.begin(), employeesAssigned.end(), e) != employeesAssigned.end()) ? false : true;
+}
+
 int Counter::getNr() const
 {
 	return this->nr;
 }
-Employee Counter::getEmployee()
+Employee Counter::getEmployee() const
 {
 	return this->employee;
 }
-std::deque<Client> Counter::getQueue()
+std::deque<Client> Counter::getQueue() const
 {
 	return this->queue;
+}
+
+int Counter::getNrsInUseSize()
+{
+	return Counter::nrsInUse.size();
 }
 
 void Counter::changeCounterNr(int newNr)
@@ -85,7 +98,18 @@ void Counter::clearQueue()
 	this->queue.clear();
 }
 
+void Counter::dismissEmployee(const Employee& e) const
+{
+	auto it = find(employeesAssigned.begin(), employeesAssigned.end(), e);	
+	if (it != employeesAssigned.end())
+		employeesAssigned.erase(it);
+}
+
 void Counter::assignEmployee(Employee e)
 {
+	if (!this->checkIfEmployeeIsFree(e))
+		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
+	this->dismissEmployee(this->employee);
+	employeesAssigned.insert(e);
 	this->employee = e;
 }

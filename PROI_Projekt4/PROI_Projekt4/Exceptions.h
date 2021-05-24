@@ -113,3 +113,15 @@ public:
 	}
 };
 
+class EmployeeAlreadyAssigned : public std::exception
+{
+	int employeeNumber;
+public:
+	EmployeeAlreadyAssigned(int employeeNumber_)
+		: employeeNumber{ employeeNumber_ }
+	{};
+	std::string what()
+	{
+		return "\nEmployee number '" + std::to_string(this->employeeNumber) + "' is already assigned to a counter.\n";
+	}
+};
