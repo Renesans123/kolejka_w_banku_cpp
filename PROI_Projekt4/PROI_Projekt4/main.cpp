@@ -1,14 +1,14 @@
-#include "mainHeader.h"
-#include <iostream>
-using namespace std;
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
 
-//int main()
-//{
-//	string s = "   Identity Card";
-//	removeEndSpaces(s);
-//
-//
-//	cout << "\n\n\nmain PEPEGA\n\n\n";
-//
-//	return 0;
-//}
+int main(int argc, char* argv[])
+{
+    //                      TESTS 
+
+    //int result = Catch::Session().run(argc, argv);
+    //return result;
+
+    //                  END TESTS
+
+    return 0;
+}

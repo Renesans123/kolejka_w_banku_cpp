@@ -11,9 +11,12 @@ Client::Client(std::string firstName_, std::string lastName_, std::string idType
 
 bool Client::operator==(const Client& cl)
 {
-	if (this->getClientCode() == cl.getClientCode())
-		return true;
-	return false;
+	return (this->getClientCode() == cl.getClientCode());
+}
+
+bool Client::operator<(const Client& cl)
+{
+	return (this->getClientCode() < cl.getClientCode());
 }
 
 std::string Client::getFirstName()

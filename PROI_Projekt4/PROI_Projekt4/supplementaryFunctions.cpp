@@ -18,7 +18,5 @@ void removeEndSpaces(std::string& s)
 bool compareStrings(std::string s1, std::string s2)
 {
 	int compare = s1.compare(s2);
-	if (compare == 0)
-		return true;
-	return false;
+	return (compare == 0);
 }

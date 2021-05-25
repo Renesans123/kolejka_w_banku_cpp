@@ -18,6 +18,7 @@ public:
 	Client(std::string firstName_, std::string lastName_, std::string idType_, std::string idNr_,
 		int clientCode_, std::string PIN_, std::vector<Product> products_ = {});
 	bool operator==(const Client& cl);
+	bool operator<(const Client& cl);
 	std::string getFirstName();
 	std::string getLastName();
 	std::string getIdType();
