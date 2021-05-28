@@ -4,10 +4,10 @@
 using namespace std;
 
 set<int> Counter::nrsInUse{};
-set<Employee> Counter::employeesAssigned{};
+vector<Employee> Counter::employeesAssigned{};
 
 Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
-	: employee{e}, queue{queue_}
+	: employee{ e }, queue{queue_}
 {
 	if (!this->checkIfNrWithinBounds(nr_))
 		throw(InvalidCounterNr(nr_));
@@ -16,9 +16,9 @@ Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
 	nrsInUse.insert(nr_);
 	this->nr = nr_;
 
-	if (!this->checkIfEmployeeIsFree(e))
-		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
-	employeesAssigned.insert(e);
+//	if (!this->checkIfEmployeeIsFree(e))
+//		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
+//	employeesAssigned.insert(e);
 }
 
 bool Counter::operator==(const Counter& c) const noexcept
@@ -46,11 +46,11 @@ int Counter::getNr() const
 {
 	return this->nr;
 }
-Employee Counter::getEmployee() const
+Employee Counter::getEmployee()
 {
 	return this->employee;
 }
-std::deque<Client> Counter::getQueue() const
+std::deque<Client> Counter::getQueue()
 {
 	return this->queue;
 }
@@ -98,18 +98,60 @@ void Counter::clearQueue()
 	this->queue.clear();
 }
 
+bool Counter::canHandleProdukt(Product product) const {
+	return this->employee.getResponsibilities().count(product.getResponsibility());
+}
+
+int Counter::getSize() {
+	return this->queue.size();
+}
+
+Client Counter::getfront() {
+	return this->queue.front();
+}
+
+bool Counter::handleClient(){
+	Client c = this->queue.front();
+	bool r =c.reduceProductTime();
+	this->queue.front() = c;
+	return r;
+}
+
 void Counter::dismissEmployee(const Employee& e) const
 {
-	auto it = find(employeesAssigned.begin(), employeesAssigned.end(), e);	
+	auto it = find(employeesAssigned.begin(), employeesAssigned.end(), e);
 	if (it != employeesAssigned.end())
 		employeesAssigned.erase(it);
 }
 
+//void Counter::assignEmployee(Employee e)
+//{
+//	if (!this->checkIfEmployeeIsFree(e))
+//		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
+//	this->dismissEmployee(this->employee);
+//	employeesAssigned.insert(e);
+//	this->employee = e;
+//}
+
 void Counter::assignEmployee(Employee e)
 {
-	if (!this->checkIfEmployeeIsFree(e))
-		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
-	this->dismissEmployee(this->employee);
-	employeesAssigned.insert(e);
 	this->employee = e;
+}
+
+bool operator <(const Counter &c, const Counter &d) {
+	return c.getNr()<d.getNr();
+}
+
+std::ostream& operator <<(std::ostream &os, Counter &l) {
+	Employee e = l.getEmployee();
+	os<<e<<endl;
+	for (Client c : l.getQueue())
+		os<<" - "<<c<<endl;
+	return os;
+}
+
+std::ostream& operator <<(std::ostream &os, vector<Counter> &l) {
+	for (Counter c : l)
+		os<<c;
+	return os;
 }

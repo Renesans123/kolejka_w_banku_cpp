@@ -4,13 +4,14 @@
 #include <deque>
 #include <memory>
 #include <algorithm>
+#include <vector>
 
 class Counter
 {
 	static std::set<int> nrsInUse;
-	static std::set<Employee> employeesAssigned;
-	int nr; // 4 digits - counter nr is unique
-	Employee employee; // each employee can only be assigned to one counter at a time 
+	static std::vector<Employee> employeesAssigned;
+	int nr; // 4 digits
+	Employee employee;
 	std::deque<Client> queue;
 public:
 	Counter(int nr_, const Employee &e, std::deque<Client> queue_ = {});
@@ -18,11 +19,15 @@ public:
 	bool checkIfNrWithinBounds(const int &counterNr);
 	bool checkIfNrIsUnique(const int &counterNr);
 	bool checkIfEmployeeIsFree(const Employee& e) const;
+	bool canHandleProdukt(Product) const;
+	bool handleClient();
 
 	int getNr() const;
-	Employee getEmployee() const;
-	std::deque<Client> getQueue() const;
+	Employee getEmployee();
+	std::deque<Client> getQueue();
 	int getNrsInUseSize();
+	int getSize();
+	Client getfront();
 
 	void changeCounterNr(int newNr);
 	void newClient(Client newCl);
@@ -32,5 +37,7 @@ public:
 	void assignEmployee(Employee e);
 	void dismissEmployee(const Employee &e) const;
 };
-
+bool operator<(const Counter& c,const Counter& d);
+std::ostream& operator<<(std::ostream& os, Counter& l);
+std::ostream& operator<<(std::ostream& os, vector<Counter>& l);
 

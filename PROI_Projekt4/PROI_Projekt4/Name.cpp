@@ -40,3 +40,7 @@ void Name::checkCaps(std::string& s)
 			*it = tolower(*it);
 	}
 }
+
+std::ostream& operator <<(std::ostream &os,const Name &l) {
+	return os << l.getFirstName() << " " << l.getLastName();
+}

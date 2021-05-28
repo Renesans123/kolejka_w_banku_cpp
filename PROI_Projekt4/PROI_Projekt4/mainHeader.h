@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "Counter.h"
 #include "Employee.h"
+#include "Bank.h"
 
 
 void removeAllSpaces(std::string& s);

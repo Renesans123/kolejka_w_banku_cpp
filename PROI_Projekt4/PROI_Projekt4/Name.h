@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iterator>
+#include <iostream>
 
 class Name
 {
@@ -16,4 +17,4 @@ public:
 	void changeLastName(std::string newLastName);
 	void checkCaps(std::string& s);
 };
-
+std::ostream& operator<<(std::ostream& os,const Name& l);

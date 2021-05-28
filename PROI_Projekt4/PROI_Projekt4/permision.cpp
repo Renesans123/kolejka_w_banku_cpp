@@ -5,13 +5,13 @@
 using std::string; using std::map;
 
 map<permision, set <responsibility>> possibleResponsibilities = {
-		{analitic,{fast_transfer,check_account,present_credit_offer}},
+		{analitic,{fast_transfer,check_account,credit_offer}},
 		{bank_assistant,{retrieve_user_data,check_account,new_user_help}},
 		{cashier,{cash_withdraw,deposit_cash,check_account}},
 		{director,{transfer,fast_transfer,retrieve_user_data,change_user_data,check_account}},
-		{financial_manager,{cash_withdraw,transfer,fast_transfer,deposit_cash,check_account,present_credit_offer,present_account_offer}},
+		{financial_manager,{cash_withdraw,transfer,fast_transfer,deposit_cash,check_account,credit_offer,account_offer}},
 		{data_specialist,{retrieve_user_data,change_user_data,check_account}},
-		{account_manager,{cash_withdraw,transfer,deposit_cash,change_user_data,check_account,present_account_offer,new_user_help}}
+		{account_manager,{cash_withdraw,transfer,deposit_cash,change_user_data,check_account,account_offer,new_user_help}}
 };
 
 string EnumToStr(permision p){
