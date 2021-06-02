@@ -14,6 +14,22 @@ Id::Id(string IdNr, string IdType)
 		throw(InvalidIdNr(this->personalNr));
 };
 
+Id::Id()
+{
+	this->setRandomNr();
+	this->setRandomType();
+}
+
+void Id::setRandomNr() // 11 digits
+{
+	this->personalNr = to_string(10000 + rand() % 90000) + to_string(100000 + rand() % 900000); // + 6 digits
+}
+
+void Id::setRandomType()
+{
+	this->type = Id::validIdTypes[rand() % validIdTypes.size()];
+}
+
 string Id::getPersonalNr()
 {
 	return this->personalNr;

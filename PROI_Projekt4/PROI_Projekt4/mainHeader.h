@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Name.h"
-#include "Id.h"
-#include "Product.h"
 #include "Client.h"
 #include "Counter.h"
 #include "Employee.h"

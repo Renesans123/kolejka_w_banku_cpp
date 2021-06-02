@@ -10,6 +10,7 @@ Name::Name(std::string first, std::string last)
 Name::Name(const Name& n)
 	: firstName{n.getFirstName()}, lastName{ n.getLastName() }
 {}
+
 std::string Name::getFirstName() const
 {
 	return this->firstName;

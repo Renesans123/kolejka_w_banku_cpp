@@ -2,12 +2,47 @@
 #include "mainHeader.h"
 using namespace std;
 
+set<int> Client::takenCodes{};
+
 Client::Client(std::string firstName_, std::string lastName_, std::string idType_, std::string idNr_,
 	int clientCode_, std::string PIN_, Product product_)
 	: name{ Name(firstName_, lastName_) }, id{ Id(idNr_, idType_) }, clientCode{ clientCode_ },
 	PIN{ PIN_ }, product{product_}
 {
+	if (!this->checkIfClientCodeValid(this->clientCode))
+		throw(InvalidClientCode(this->clientCode));
+	if (!this->checkIfCodeIsUnique(this->clientCode))
+		throw(DuplicateClientCode(this->clientCode));
+	takenCodes.insert(this->clientCode);
 }
+
+Client::Client(std::string firstName_, std::string lastName_, Product product_)
+	: name{ Name(firstName_, lastName_) }, id{ Id() }, product{ product_ }
+{
+	this->setRandomClientCode();
+	this->setRandomPIN();
+}
+
+void Client::setRandomClientCode()
+{
+	bool foundCode{ false };
+	while (!foundCode)
+	{
+		int code = 100000 + rand() % 900000;
+		if (checkIfCodeIsUnique(code))
+		{
+			foundCode = true;
+			takenCodes.insert(code);
+			this->clientCode = code;
+		}
+	}
+}
+
+void Client::setRandomPIN()
+{
+	this->PIN = to_string(1000 + rand() % 9000);
+}
+
 
 bool Client::operator==(const Client& cl)
 {
@@ -43,10 +78,6 @@ std::string Client::getPIN()
 {
 	return this->PIN;
 }
-//std::vector<Product> Client::getProducts()
-//{
-//	return this->products;
-//}
 
 bool Client::checkIfClientCodeValid(const int &code)
 {
@@ -58,6 +89,13 @@ bool Client::checkIfClientCodeValid(const int &code)
 			return false;
 	return true;
 }
+
+bool Client::checkIfCodeIsUnique(const int& clientCode)
+{
+	// check if code isn't already used - must be unique
+	return (find(takenCodes.begin(), takenCodes.end(), clientCode) != takenCodes.end()) ? false : true;
+}
+
 bool Client::checkIfPINValid(const string &pin)
 {
 	if (pin.length() != 4)
@@ -72,6 +110,11 @@ void Client::changeClientCode(int newClientCode)
 {
 	if (!this->checkIfClientCodeValid(newClientCode))
 		throw(InvalidClientCode(newClientCode));
+	if (!this->checkIfCodeIsUnique(newClientCode))
+		throw(DuplicateClientCode(newClientCode));
+	auto it = find(takenCodes.begin(), takenCodes.end(), this->clientCode);
+	takenCodes.erase(it);
+	takenCodes.insert(newClientCode);
 	this->clientCode = newClientCode;
 }
 
@@ -123,12 +166,13 @@ bool operator <(const Client &cl, const Client &sc) {
 }
 
 std::ostream& operator <<(std::ostream &os, Client &l) {
-	os<<"Cl:"<<l.getClientCode()<<" "<<l.getName()<<" "<<l.getIdType()<<" "<<l.getIdNr()<<" "<<l.getProduct();
+	os<<"Client Code: "<< l.getClientCode() << " | Name: " << 
+		l.getName() << " | Id: " << l.getIdType() << " - " << l.getIdNr() << " | " << l.getProduct();
 	return os;
 }
 
 std::ostream& operator <<(std::ostream &os, set<Client> &l) {
 	for (auto c : l)
-		os<<" "<<c<<endl;
+		os << c << endl;
 	return os;
 }

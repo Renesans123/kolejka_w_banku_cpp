@@ -1,10 +1,11 @@
 #include "Counter.h"
 #include <string>
 #include <algorithm>
+#include <time.h>
 using namespace std;
 
 set<int> Counter::nrsInUse{};
-vector<Employee> Counter::employeesAssigned{};
+set<Employee> Counter::employeesAssigned{};
 
 Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
 	: employee{ e }, queue{queue_}
@@ -16,9 +17,30 @@ Counter::Counter(int nr_, const Employee &e, std::deque<Client> queue_)
 	nrsInUse.insert(nr_);
 	this->nr = nr_;
 
-//	if (!this->checkIfEmployeeIsFree(e))
-//		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
-//	employeesAssigned.insert(e);
+	if (!this->checkIfEmployeeIsFree(e))
+		throw(EmployeeAlreadyAssigned(e.getEmployeeNumber()));
+	employeesAssigned.insert(e);
+}
+
+Counter::Counter(const Employee& e, std::deque<Client> queue_)
+	: employee{ e }, queue{ queue_ }
+{
+	this->setRandomCounterNumber();
+}
+
+void Counter::setRandomCounterNumber()
+{
+	bool foundNr{ false };
+	while (!foundNr)
+	{
+		int nr = rand() % 9000 + 1000;
+		if (this->checkIfNrIsUnique(nr))
+		{
+			foundNr = true;
+			nrsInUse.insert(nr);
+			this->nr = nr;
+		}
+	}
 }
 
 bool Counter::operator==(const Counter& c) const noexcept
@@ -102,7 +124,8 @@ bool Counter::canHandleProdukt(Product product) const {
 	return this->employee.getResponsibilities().count(product.getResponsibility());
 }
 
-int Counter::getSize() {
+int Counter::getQueueSize() const
+{
 	return this->queue.size();
 }
 
@@ -110,9 +133,10 @@ Client Counter::getfront() {
 	return this->queue.front();
 }
 
-bool Counter::handleClient(){
+bool Counter::handleClient()
+{
 	Client c = this->queue.front();
-	bool r =c.reduceProductTime();
+	bool r = c.reduceProductTime();
 	this->queue.front() = c;
 	return r;
 }
@@ -138,19 +162,22 @@ void Counter::assignEmployee(Employee e)
 	this->employee = e;
 }
 
-bool operator <(const Counter &c, const Counter &d) {
-	return c.getNr()<d.getNr();
+bool operator<(const Counter &c1, const Counter &c2) {
+	return c1.getQueueSize() < c2.getQueueSize();
 }
 
-std::ostream& operator <<(std::ostream &os, Counter &l) {
+std::ostream& operator<<(std::ostream &os, Counter &l)
+{
+	os << "\n\nCounter: " << l.getNr() << "\n\n";
 	Employee e = l.getEmployee();
-	os<<e<<endl;
+	os << "Employee: " << e << endl;
+	os << "Queue:\n";
 	for (Client c : l.getQueue())
-		os<<" - "<<c<<endl;
+		os << " - " << c <<endl;
 	return os;
 }
 
-std::ostream& operator <<(std::ostream &os, vector<Counter> &l) {
+std::ostream& operator<<(std::ostream &os, vector<Counter> &l) {
 	for (Counter c : l)
 		os<<c;
 	return os;

@@ -46,5 +46,5 @@ void Product::setName(const string &name) {
 }
 
 std::ostream& operator <<(std::ostream &os,const Product &l) {
-	return os<<EnumToStr(l.getResponsibility())<<" "<<l.getName()<<" r.time:"<<l.getTime();
+	return os << "Product: '" << EnumToStr(l.getResponsibility()) << "' " << l.getName() << " r. time: " << l.getTime();
 }

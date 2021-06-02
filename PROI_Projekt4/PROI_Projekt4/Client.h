@@ -16,8 +16,15 @@ private:
 	std::string PIN; // 4 digits
 	Product product;
 public:
+	static set<int> takenCodes;
 	Client(std::string firstName_, std::string lastName_, std::string idType_, std::string idNr_,
 		int clientCode_, std::string PIN_, Product product);
+	Client(std::string firstName_, std::string lastName_, Product product_);
+
+	void setRandomClientCode();
+	void setRandomPIN();
+
+	bool checkIfCodeIsUnique(const int& clientCode);
 	bool operator==(const Client& cl);
 	bool operator<(const Client& cl);
 	std::string getFirstName();

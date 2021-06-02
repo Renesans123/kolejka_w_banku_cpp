@@ -113,6 +113,19 @@ public:
 	}
 };
 
+class DuplicateClientCode : public std::exception
+{
+	int nr;
+public:
+	DuplicateClientCode(int nr_)
+		: nr{ nr_ }
+	{};
+	std::string what()
+	{
+		return "\nClient with code '" + std::to_string(this->nr) + "' already in database.\n";
+	}
+};
+
 class EmployeeAlreadyAssigned : public std::exception
 {
 	int employeeNumber;
@@ -123,5 +136,42 @@ public:
 	std::string what()
 	{
 		return "\nEmployee number '" + std::to_string(this->employeeNumber) + "' is already assigned to a counter.\n";
+	}
+};
+
+class FileNotFoundError : public std::exception
+{
+	std::string filename;
+public:
+	FileNotFoundError(std::string filename_)
+		: filename{ filename_ }
+	{};
+	std::string what()
+	{
+		return "\nFile '" + this->filename + "' not found in current directory.\n";
+	}
+};
+
+class AllNumbersTakenError : public std::exception
+{
+public:
+	AllNumbersTakenError()
+	{};
+	std::string what()
+	{
+		return "\nAll employee numbers are taken.\n";
+	}
+};
+
+class EmployeeNumberTaken : public std::exception
+{
+	int employeeNumber;
+public:
+	EmployeeNumberTaken(int employeeNumber_)
+		: employeeNumber{ employeeNumber_ }
+	{};
+	std::string what()
+	{
+		return "\nEmployee number '" + std::to_string(this->employeeNumber) + "' is already taken.\n";
 	}
 };

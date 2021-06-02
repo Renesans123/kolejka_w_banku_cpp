@@ -2,7 +2,7 @@
 #include "mainHeader.h"
 using namespace std;
 
-set<int> Employee::availableNumbers;
+set<int> Employee::takenNumbers{};
 Name Employee::getName()
 {
 	return this->name;
@@ -11,41 +11,65 @@ Name Employee::getName()
 Employee::Employee(std::string firstName, std::string lastName)
 : name{Name(firstName, lastName)}
 {
-		this->setEmployeeNumber();
-		this->setStationNumber(0);
+	this->generateEmployeeNumber();
 }
+
 Employee::~Employee() {
 };
+
+void Employee::generateEmployeeNumber()
+{
+	bool foundNr{ false };
+	if (takenNumbers.size() >= 9000)
+		throw(AllNumbersTakenError());
+	while (!foundNr)
+	{
+		int nr = rand() % 9000 + 1000;
+		if (find(takenNumbers.begin(), takenNumbers.end(), nr) == takenNumbers.end())
+		{
+			foundNr = true;
+			this->employeeNumber = nr;
+			takenNumbers.insert(nr);
+		}
+	}
+}
+
+void Employee::setEmployeeNumber(int newNr) {
+	if (takenNumbers.size() >= 9000)
+		throw(AllNumbersTakenError());
+	auto itNewNr = find(takenNumbers.begin(), takenNumbers.end(), newNr);
+	if (itNewNr != takenNumbers.end())
+		throw(EmployeeNumberTaken(newNr));
+	else
+	{
+		// delete current number from takenNumbers
+		auto it = find(takenNumbers.begin(), takenNumbers.end(), this->employeeNumber);
+		if (it != takenNumbers.end())
+		{
+			takenNumbers.erase(it);
+		}
+		this->employeeNumber = newNr;
+		takenNumbers.insert(newNr);
+	}
+}
 
 int Employee::getEmployeeNumber() const {
 	return this->employeeNumber;
 };
 
-void Employee::setEmployeeNumber(int employeeNumber) {
-	this->employeeNumber = employeeNumber;
-};
-
-int Employee::getStationNumber() const {
-	return this->stationNumber;
-};
-
-void Employee::setStationNumber(int stationNumber) {
-	this->stationNumber = stationNumber;
-};
-
-const set<permision>& Employee::getPermisionsGranted() const {
-	return permissions;
+const set<permission>& Employee::getPermissionsGranted() const
+{
+	return this->permissions;
 }
 
-void Employee::addPermision(permision permisionGranted) {
-	this->permissions.insert(permisionGranted);
-	//std::cout<<this->permissions.empty();
+void Employee::addPermission(permission permissionGranted) {
+	this->permissions.insert(permissionGranted);
 }
 const set<responsibility>& Employee::getResponsibilities() const {
 	return responsibilities;
 }
-void Employee::removePermision(permision permisionToRemove) {
-	this->permissions.erase(permisionToRemove);
+void Employee::removePermission(permission permissionToRemove) {
+	this->permissions.erase(permissionToRemove);
 	set<responsibility> responsibilitiesToRemove;
 	for (auto r : this->getResponsibilities())
 		if (!(this->canHaveResposibility(r)))
@@ -53,7 +77,7 @@ void Employee::removePermision(permision permisionToRemove) {
 	for (auto r : responsibilitiesToRemove)
 		this->removeResposibility(r);
 }
-void Employee::clearPermisions() {
+void Employee::clearPermissions() {
 	this->permissions.clear();
 }
 
@@ -76,15 +100,6 @@ bool Employee::canHaveResposibility(const responsibility resp) {
 	}
 	return false;
 }
-void Employee::setEmployeeNumber() {
-	if (Employee::availableNumbers.empty())
-		Employee::availableNumbers.insert(1);
-	this->employeeNumber = *(Employee::availableNumbers).begin();
-	if (Employee::availableNumbers.size()==1)
-		Employee::availableNumbers.insert(this->employeeNumber+1);
-	Employee::availableNumbers.erase(this->employeeNumber);
-}
-
 
 void Employee::clearResponsiblities() {
 	this->responsibilities.clear();
@@ -99,28 +114,13 @@ string Employee::getLastName()
 	return this->getName().getLastName();
 }
 
-ostream& Employee::operator<<(ostream &os) {
-	os<<"name:"<<this->getFirstName()<<" "<<this->getLastName()<<endl;
-	os<<"Employee number:"<<this->getEmployeeNumber()<<endl;
-	os<<"Permisions:";
-	for (auto p : this->getPermisionsGranted()){
-		os<<EnumToStr(p)<<" ";
-	}
-	os<<"\nResponsibilities:";
-	for (auto r : this->getResponsibilities()){
-		os<<EnumToStr(r)<<" ";
-	}
-	os<<"\n\n";
-	return os;
+bool Employee::operator<(const Employee& r)
+{
+    return this->getEmployeeNumber()< r.getEmployeeNumber();
 }
 
-bool Employee::operator<(const Employee& r)
-    {
-        return this->getEmployeeNumber()< r.getEmployeeNumber();
-    }
-
 bool operator<(const Employee& l, const Employee& r)
-    {
+{
         return l.getEmployeeNumber()< r.getEmployeeNumber();
 }
 
@@ -129,19 +129,24 @@ bool operator ==(const Employee &l, const Employee &r) {
 }
 
 std::ostream& operator <<(std::ostream &os, Employee &l) {
-	os<<"E.nr:"<<l.getEmployeeNumber()<<" "<<l.getFirstName()<<" "<<l.getLastName();
-	for (auto p : l.getPermisionsGranted()){
-		os<<" "<<EnumToStr(p);
+	os << "Name: " << l.getFirstName() << " " << l.getLastName() << " | "
+		<< "Employee number: " << l.getEmployeeNumber() << endl;
+	os << "Permissions:";
+	for (auto p : l.getPermissionsGranted())
+	{
+		os << " " << EnumToStr(p) << " |";
 	}
-	os<<":";
-	for (auto r : l.getResponsibilities()){
-		os<<" "<<EnumToStr(r);
+	os << "\b \nResponsibilities: ";
+	for (auto r : l.getResponsibilities())
+	{
+		os << " " << EnumToStr(r) << " |";
 	}
+	os << "\b \n";
 	return os;
 }
 
 std::ostream& operator <<(std::ostream &os, set<Employee> &l) {
 	for (auto e: l)
-		os<<" "<<e<<endl;
+		os << e << endl;
 	return os;
 }

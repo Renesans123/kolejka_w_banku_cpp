@@ -6,6 +6,8 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    srand((unsigned)time(NULL));
+
     //                      TESTS 
 
     //int result = Catch::Session().run(argc, argv);
@@ -18,7 +20,7 @@ int main(int argc, char* argv[])
 //	c.reduceProductTime();
 //	cout<<c;
 
-	Bank b = Bank(5, 50);
-	b.Simulate(1);
+	Bank b = Bank(7, 111);
+	b.simulate(1);
     return 0;
 }

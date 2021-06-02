@@ -9,12 +9,14 @@
 class Counter
 {
 	static std::set<int> nrsInUse;
-	static std::vector<Employee> employeesAssigned;
+	static std::set<Employee> employeesAssigned;
 	int nr; // 4 digits
 	Employee employee;
 	std::deque<Client> queue;
 public:
 	Counter(int nr_, const Employee &e, std::deque<Client> queue_ = {});
+	Counter(const Employee &e, std::deque<Client> queue_ = {});
+	void setRandomCounterNumber();
 	bool operator==(const Counter& c) const noexcept;
 	bool checkIfNrWithinBounds(const int &counterNr);
 	bool checkIfNrIsUnique(const int &counterNr);
@@ -26,7 +28,7 @@ public:
 	Employee getEmployee();
 	std::deque<Client> getQueue();
 	int getNrsInUseSize();
-	int getSize();
+	int getQueueSize() const;
 	Client getfront();
 
 	void changeCounterNr(int newNr);
