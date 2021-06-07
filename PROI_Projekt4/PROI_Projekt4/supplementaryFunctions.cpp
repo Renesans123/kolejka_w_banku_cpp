@@ -20,3 +20,9 @@ bool compareStrings(std::string s1, std::string s2)
 	int compare = s1.compare(s2);
 	return (compare == 0);
 }
+
+void runSimulation(int m, int n, std::string filename)
+{
+	Bank b(m, n);
+	b.simulate(filename);
+}

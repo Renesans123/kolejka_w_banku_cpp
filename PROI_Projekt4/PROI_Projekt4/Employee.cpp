@@ -8,11 +8,16 @@ Name Employee::getName()
 	return this->name;
 }
 
-Employee::Employee(std::string firstName, std::string lastName)
+Employee::Employee(string firstName, string lastName)
 : name{Name(firstName, lastName)}
 {
 	this->generateEmployeeNumber();
 }
+
+Employee::Employee(string firstName, string lastName, int nr)
+	: name{ Name(firstName, lastName) }, employeeNumber{nr}
+{}
+
 
 Employee::~Employee() {
 };
@@ -131,12 +136,12 @@ bool operator ==(const Employee &l, const Employee &r) {
 std::ostream& operator <<(std::ostream &os, Employee &l) {
 	os << "Name: " << l.getFirstName() << " " << l.getLastName() << " | "
 		<< "Employee number: " << l.getEmployeeNumber() << endl;
-	os << "Permissions:";
+	os << "Designation:";
 	for (auto p : l.getPermissionsGranted())
 	{
 		os << " " << EnumToStr(p) << " |";
 	}
-	os << "\b \nResponsibilities: ";
+	os << "\b \nPermissions: ";
 	for (auto r : l.getResponsibilities())
 	{
 		os << " " << EnumToStr(r) << " |";

@@ -20,7 +20,7 @@ public:
 	void loadCounters();
 	void loadQueues();
 
-	void simulate(double update_time);
+	void simulate(string filename);
 	bool allQueuesEmpty();
 	const set<Client>& getClients() const;
 	void setClients(const set<Client> &clients);

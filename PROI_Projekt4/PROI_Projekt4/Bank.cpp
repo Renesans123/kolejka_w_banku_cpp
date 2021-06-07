@@ -11,12 +11,38 @@ using namespace std;
 set<string> Bank::randomFirstNames;
 set<string> Bank::randomSecondNames;
 
+
+const set<Client>& Bank::getClients() const {
+	return clients;
+}
+
+void Bank::setClients(const set<Client>& clients) {
+	this->clients = clients;
+}
+
+const vector<Counter>& Bank::getCounters() const {
+	return counters;
+}
+
+void Bank::setCounters(const vector<Counter>& counters) {
+	this->counters = counters;
+}
+
+const set<Employee>& Bank::getEmployees() const {
+	return employees;
+}
+
+void Bank::setEmployees(const set<Employee>& employees) {
+	this->employees = employees;
+}
+
+
 Bank::Bank(int m, int n) {
 	if (randomFirstNames.empty() or randomSecondNames.empty())
 		loadRandomNames("firstname.txt", "surname.txt");
 	loadEmployees(m);
 	loadClients(n);
-	loadCounters(); // assuming that the nr of counters = nr of employees
+	loadCounters(); // for the purpose of the simulation assuming that the nr of counters >= nr of employees
 }
 
 void Bank::loadRandomNames(string firstNameFile, string lastNameFile) {
@@ -127,9 +153,9 @@ ostream& operator <<(ostream& os, Bank& l)
 }
 
 
-void Bank::simulate(double update_time)
+void Bank::simulate(string filename)
 {
-	ofstream file("BankLogs.txt");
+	ofstream file(filename);
 	this->loadQueues();
 	P(*this);
 
@@ -141,15 +167,10 @@ void Bank::simulate(double update_time)
 		{
 			if (counters[i].getQueueSize()!=0 && counters[i].handleClient())
 			{
-				// At [time]:
-				// Employee [name], id: [nr] of designation [permission]
-				// helped client [name], code: [clientCode]
-				// with [responsibility]
 				P("T: " << time << " - " << counters[i].getEmployee().getFirstName() << " "
-					<< counters[i].getEmployee().getLastName() << " helped client: " << counters[i].getfront().getFirstName() << " "
+					<< counters[i].getEmployee().getLastName() << " helped client " << counters[i].getfront().getFirstName() << " "
 					<< counters[i].getfront().getLastName() << " with action '" << EnumToStr(counters[i].getfront().getProduct().getResponsibility()) << "'.\n");
 				counters[i].clientLeftAfterService();
-				//sleep((int)(update_time));
 			}
 		}
 		time ++;
@@ -157,34 +178,3 @@ void Bank::simulate(double update_time)
 	file.close();
 	P(setw(21) << setfill('=') << right << " " << "END OF SIMULATION " << setw(21) << setfill('=') << " " << endl);
 }
-
-
-
-
-
-const set<Client>& Bank::getClients() const {
-	return clients;
-}
-
-void Bank::setClients(const set<Client> &clients) {
-	this->clients = clients;
-}
-
-const vector<Counter>& Bank::getCounters() const {
-	return counters;
-}
-
-void Bank::setCounters(const vector<Counter> &counters) {
-	this->counters = counters;
-}
-
-const set<Employee>& Bank::getEmployees() const {
-	return employees;
-}
-
-void Bank::setEmployees(const set<Employee> &employees) {
-	this->employees = employees;
-}
-
-
-

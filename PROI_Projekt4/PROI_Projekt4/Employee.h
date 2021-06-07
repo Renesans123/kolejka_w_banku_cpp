@@ -14,6 +14,7 @@ class Employee
 	set<responsibility> responsibilities;
 public:
 	Employee(std::string firstName, std::string lastName);
+	Employee(std::string firstName, std::string lastName, int nr);
 	Name getName();
 	virtual ~Employee();
 	void generateEmployeeNumber();

@@ -5,12 +5,12 @@ using namespace std;
 
 class Product
 {
-
 	responsibility requiredResponsibility;
 	int time;
 	string name;
 
 public:
+	Product() = default;
 	Product(responsibility requiredResponsibility, int time, string name);
 	bool operator==(const Product& p2);
 	responsibility getResponsibility() const;
